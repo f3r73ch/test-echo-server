@@ -1,0 +1,33 @@
+name: Hello World Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-test-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v5
+
+      - name: Build Docker image
+        run: |
+          docker build -t hello-world:latest .
+
+      - name: Test container
+        run: |
+          output=$(docker run --rm hello-world:latest)
+          echo "$output"
+
+          if [[ "$output" != "Hello from GitHub Actions!" ]]; then
+            echo "Test failed"
+            exit 1
+          fi
+
+      - name: Deploy
+        run: |
+          echo "Deploying application..."
+          echo "Hello World deployment completed"
